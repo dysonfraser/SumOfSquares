@@ -8,55 +8,82 @@ import (
 	"strconv"
 )
 
+func printAnswers(answers []int, index int) int {
+	if index == len(answers){
+		return 0
+	}
+	fmt.Println(answers[index])
+	return printAnswers(answers, index + 1)
+}
+
+func summer(nums []string, index int) int {
+	if index < 0 {
+		return 0
+	}
+
+	num, _ := strconv.Atoi(nums[index])
+
+	if num < 0 {
+		return summer(nums, index - 1)
+	} else {
+		
+		return num * num + summer(nums, index - 1)
+	}
+	
+}
+
+func cases(numOfCases int, answers []int) []int {
+	if numOfCases == 0 {
+		return answers
+	}
+	
+	reader := bufio.NewReader(os.Stdin)
+
+	text, _ := reader.ReadString('\n')
+	text = strings.Replace(text, "\r\n", "", -1)
+	numOfNums, err := strconv.Atoi(text)
+
+	if err != nil {
+		fmt.Println("Invalid Input")
+		os.Exit(1)
+	}
+
+	text2, _ := reader.ReadString('\n')
+	text2 = strings.Replace(text2, "\r\n", "", -1)
+	nums := strings.Split(text2, " ")
+	
+	
+	if numOfNums != len(nums) {
+		fmt.Println("Invalid Input")
+		os.Exit(1)
+	}
+
+	answers = append(answers, summer(nums, numOfNums - 1))
+	
+	return cases(numOfCases - 1, answers)
+	
+}
+
+
 func main () {
 
 	reader := bufio.NewReader(os.Stdin)
 	
 	numOfCases := 0
 
-	for {
+	text, _ := reader.ReadString('\n')
 
-		text, _ := reader.ReadString('\n')
+	text = strings.Replace(text, "\r\n", "", -1)
+	numOfCases, _ = strconv.Atoi(text)
+	var answers []int
 
-		text = strings.Replace(text, "\r\n", "", -1)
-		numOfCases, _ = strconv.Atoi(text)
+	answers = cases(numOfCases, answers)
+	
+	index := 0
 
-		var answers []int
+	printAnswers(answers, index)	
+
+	os.Exit(1)
 		
-		
-		for i := 0; i < numOfCases; i++ {
-			
-			text, _ := reader.ReadString('\n')
-			text = strings.Replace(text, "\r\n", "", -1)
-			
-			numOfNums, _ := strconv.Atoi(text)
-
-			muted, _ := reader.ReadString('\n')
-			
-			muted = strings.Replace(muted, "\r\n", "", -1)
-			
-			nums := strings.Split(muted, " ")
-			
-			sum := 0
-			curNum := 0
-
-			for j := 0; j < numOfNums; j++ {
-				curNum, _ = strconv.Atoi(nums[j])
-				if curNum > 0 {
-					sum = sum + (curNum * curNum)		
-				}
-				
-			}
-
-			answers = append(answers, sum)
-			
-		}
-		
-		for i := 0; i < len(answers); i ++ {
-			fmt.Println(answers[i])
-		}
-
-		os.Exit(1)
-		
-	}
+	
 }
